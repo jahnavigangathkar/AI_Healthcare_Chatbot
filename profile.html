@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+    <header>
+        <h1>User Profile</h1>
+        <nav>
+            <a href="home.html">Home</a>
+            <a href="chatbot.html">HealthMate</a>
+            <a href="index.html">Logout</a>
+        </nav>
+    </header>
+
+    <input 
+        type="file" 
+        class="inputFile" 
+        id="profile-photo-input"
+        onchange="previewImage(event)" 
+        accept="image/png, image/jpeg"
+    />
+    <label for="profile-photo-input" id="profile-photo-label" class="profile-photo-label">+</label> 
+    <span class="fileText"></span>
+    <button id="upload-photo-btn">UPLOAD IMAGE</button>
+
+    <div class="imageuploader">
+        <img alt="" class="img" id="profile-photo-preview">
+    </div>
+
+    <div class="profile-details">
+        <div class="input-field">
+            <p>Name: <input type="text" id="username" class="circular-input"/></p>
+        </div>
+        <div class="input-field">
+            <p>Age: <input type="number" id="age" class="circular-input"/></p>
+        </div>
+        <div class="input-field">
+            <p>State: <input type="text" id="state" class="circular-input"/></p>
+        </div>
+        <div class="input-field">
+            <p>City: <input type="text" id="city" class="circular-input"/></p>
+        </div>
+        <div class="input-field">
+            <p>Gender: <input type="text" id="gender" class="circular-input"/></p>
+        </div>
+        <div class="input-field">
+            <p>Phone Number: <input type="text" id="phno" class="circular-input"/></p>
+        </div>
+    </div>
+    <div class="profile-btn">
+        <button id="save-profile-btn">SAVE </button>
+    </div>
+    
+
+    <footer>
+        <p></p>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getStorage, ref as storageRef, getDownloadURL, uploadBytes } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyDDTL1YbbtTvTlzfl3xF8sl2xvFlOQ83b0",
+          authDomain: "healthcare-chat-bot-2e726.firebaseapp.com",
+          databaseURL: "https://healthcare-chat-bot-2e726-default-rtdb.firebaseio.com",
+          projectId: "healthcare-chat-bot-2e726",
+          storageBucket: "healthcare-chat-bot-2e726.appspot.com",
+          messagingSenderId: "970823655959",
+          appId: "1:970823655959:web:387b836d1610e70991b252"
+        };
+      
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+        const auth = getAuth();
+        const storage = getStorage();
+
+        onAuthStateChanged(auth, function(user) {
+            if (user) {
+                // User is signed in
+                displayProfile(user.uid);
+            } else {
+                // No user is signed in
+                window.location.href = "index.html";
+            }
+        });
+
+        function displayProfile(userId) {
+            const userRef = ref(db, 'users/' + userId);
+            get(userRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    document.getElementById('username').value = userData.username || "NA";
+                    document.getElementById('age').value = userData.age || "NA";
+                    document.getElementById('state').value = userData.state || "NA";
+                    document.getElementById('city').value = userData.city || "NA";
+                    document.getElementById('gender').value = userData.gender || "NA";
+                    document.getElementById('phno').value = userData.phno || "NA";
+
+                    // Fetch and display the profile photo
+                    if (userData.photoURL) {
+                        getDownloadURL(storageRef(storage, userData.photoURL))
+                            .then((url) => {
+                                document.getElementById('profile-photo-preview').src = url;
+                                document.getElementById('profile-photo-label').style.backgroundImage = `url(${url})`;
+                            })
+                            .catch((error) => {
+                                console.error('Error fetching photo URL:', error);
+                            });
+                    }
+                } else {
+                    console.log("No such user data exists!");
+                }
+            }).catch((error) => {
+                console.error("Error getting user data:", error);
+            });
+        }
+
+        document.getElementById('upload-photo-btn').addEventListener('click', function() {
+            const file = document.getElementById('profile-photo-input').files[0];
+            const userId = auth.currentUser.uid;
+            const storageReference = storageRef(storage, 'profile_photos/' + userId);
+
+            uploadBytes(storageReference, file).then((snapshot) => {
+                getDownloadURL(snapshot.ref).then((downloadURL) => {
+                    const userRef = ref(db, 'users/' + userId);
+                    update(userRef, { photoURL: snapshot.metadata.fullPath })
+                        .then(() => {
+                            document.getElementById('profile-photo-preview').src = downloadURL;
+                            document.getElementById('profile-photo-label').style.backgroundImage = `url(${downloadURL})`;
+                        })
+                        .catch((error) => {
+                            console.error('Error saving photo URL:', error);
+                        });
+                });
+            }).catch((error) => {
+                console.error('Error uploading photo:', error);
+            });
+        });
+
+        document.getElementById('save-profile-btn').addEventListener('click', function() {
+            const userId = auth.currentUser.uid;
+            const userRef = ref(db, 'users/' + userId);
+
+            const updatedUserData = {
+                username: document.getElementById('username').value,
+                age: document.getElementById('age').value,
+                state: document.getElementById('state').value,
+                city: document.getElementById('city').value,
+                gender: document.getElementById('gender').value,
+                phno: document.getElementById('phno').value,
+            };
+
+            update(userRef, updatedUserData)
+                .then(() => {
+                    console.log('Profile updated successfully');
+                    alert('Profile updated successfully');
+                })
+                .catch((error) => {
+                    console.error('Error updating profile:', error);
+                    alert('Error updating profile:', error.message);
+                });
+        });
+    
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const result = reader.result;
+                document.getElementById('profile-photo-preview').src = result;
+                document.getElementById('profile-photo-label').style.backgroundImage = `url(${result})`;
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+</body>
+</html>

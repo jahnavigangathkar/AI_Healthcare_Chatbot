@@ -1,0 +1,45 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url(PIC\(3\).jpg);
+}
+
+header {
+    background-color: #313031;
+    color: #fff;
+    padding: 20px;
+}
+
+header nav {
+    width: 80%;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    font-size: 24px;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin-right: 20px;
+    font-size: 19px;
+}
+
+.content {
+    padding: 20px;
+    color: white;
+}
+h1{
+    font-family: cursive;
+}
+
+footer {
+    background-color: #313031;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}

@@ -1,0 +1,158 @@
+/* Reset default margin and padding for all elements */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Helvetica, sans-serif;
+    letter-spacing: 2px;
+}
+
+/* Body styling */
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    font-family: 'Times New Roman', Times, serif;
+    background-image: url(PIC\(6\).jpg);
+}
+
+/* Header styling */
+header {
+    background-color: #910d74;
+    color: #fff;
+    padding: 20px;
+    width: 100%;
+    text-align: left;
+}
+
+header h1 {
+    margin: 0;
+}
+
+/* Navigation styling */
+nav {
+    margin-top: 10px;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+/* Input container for alignment */
+.input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* Label styling */
+label {
+    height: 100px;
+    width: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    margin-bottom: 10px;
+    margin-top: 3px;
+    font-size: 50px;
+    background: linear-gradient(45deg, rgb(118, 118, 146), rgb(146, 134, 134));
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+/* Button styling */
+button {
+    padding: 10px 25px;
+    background: rgb(126, 2, 120);
+    color: white;
+    border: none;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 500;
+    border-radius: 25px;
+}
+
+/* Profile button styling */
+.profile-btn {
+    border: none;
+    border-radius: 20px;
+    font-size: 15px;
+    color: #ffffff;
+    cursor: pointer;
+    padding: 10px 25px;
+    bottom: 700px;
+    right: 90px;
+}
+
+/* Image styling */
+.img {
+    height: 100px;
+    width: 100px;
+    object-fit: cover;
+    display: block;
+    border-radius: 50%;
+    margin-top: 10px;
+}
+
+/* Profile details styling */
+.profile-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 50px;
+    gap: 10px; /* Adding gap to equally space the input fields */
+}
+
+.profile-details p {
+    display: flex;
+    align-items: flex-end;
+    size: 10px;
+}
+
+.profile-details input {
+    height: 30px;
+    width: 100%;
+    border: none;
+    border-radius: 10%;
+    text-align: center;
+    margin-left: 10px;
+}
+
+/* Footer styling */
+footer {
+    background-color: #910d74;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+.profile-photo-label {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    background-size: cover;
+    background-position: center;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 100px;
+    font-size: 24px;
+    color: #666;
+    cursor: pointer;
+    overflow: hidden;
+}
+.inputFile {
+    display: none;
+}
